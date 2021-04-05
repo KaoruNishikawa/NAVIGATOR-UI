@@ -6,9 +6,10 @@
     "author": "Kaoru Nishikawa <k.nishikawa@a.phys.nagoya-u.ac.jp>",
     "main": "index.html",
     "dependencies": {
-        "express": "^4.17.1",
         "rclnodejs": "^0.18.1",
-        "react": "^17.0.1",
+        "fastify": "^3.14.1",
+        "fastify-static": "^4.0.1",
+        "fastify-websocket": "^3.1.0",
         "xterm": "^4.10.0",
         "xterm-addon-attach": "^0.6.0"
     },
