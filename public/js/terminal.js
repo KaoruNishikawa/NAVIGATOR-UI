@@ -10,6 +10,7 @@ class ClientTerminal {
 
     constructor(ws, element) {
         this.term = new Terminal({
+            cols: 80,
             cursorBlink: true,
             cursorStyle: "block",
             rendererType: "canvas",
@@ -105,7 +106,9 @@ class SystemStatus {
 }
 
 
-let ws = new WebSocket('ws://192.168.11.6:4864/ws');
+// let ws = new WebSocket('ws://192.168.11.6:4864/ws');
+// let ws = new WebSocket('ws://192.168.101.67:4864/ws');
+const ws = new WebSocket(location.origin.replace(/^http/, "ws") + "/ws")
 
 const elementTerminal = document.getElementById('mainTerminal');
 const terminal = new ClientTerminal(ws, elementTerminal);
@@ -133,7 +136,7 @@ disconnect.addEventListener("click", e => {
     ws.close()
     console.log("Disconnected.")
 })
-reconnect.addEventListener("click", e => {
-    ws.open()
-    console.log("Disconnected.")
-})
+// reconnect.addEventListener("click", e => {
+//     ws = new WebSocket('ws://192.168.11.6:4864/ws');
+//     console.log("Reconnection attempted.")
+// })

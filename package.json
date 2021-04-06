@@ -1,15 +1,12 @@
 {
-    "name": "nasco_monitor",
+    "name": "nasco-monitor",
     "version": "0.1.0",
-    "description": "Web monitor for NASCO observations.",
+    "description": "GUI tool for monitoring NASCO system status.",
     "private": true,
     "author": "Kaoru Nishikawa <k.nishikawa@a.phys.nagoya-u.ac.jp>",
     "main": "index.html",
     "dependencies": {
-        "rclnodejs": "^0.18.1",
-        "fastify": "^3.14.1",
-        "fastify-static": "^4.0.1",
-        "fastify-websocket": "^3.1.0",
+        "electron": "^12.0.2",
         "xterm": "^4.10.0",
         "xterm-addon-attach": "^0.6.0"
     },

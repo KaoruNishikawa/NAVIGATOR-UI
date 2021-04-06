@@ -36,7 +36,8 @@ server.get("/ws", { websocket: true }, (conn, req) => {
 })
 
 /* Specify IP address of the server and run it */
-const serverIP = process.env.NASCO_SERVER_IP || "192.168.11.6";
+// const serverIP = process.env.NASCO_SERVER_IP || "192.168.11.6";
+const serverIP = process.env.NASCO_SERVER_IP || "192.168.101.67";
 const serverPort = process.env.NASCO_SERVER_PORT || 4864;
 server.listen(serverPort, serverIP, (err, address) => {
     if (err) {

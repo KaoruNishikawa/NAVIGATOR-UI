@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "PACKAGENAME"
+name = "nasco-monitor"
 version = "0.1.0"
-description = "TEMPLATE"
+description = "GUI tool for monitoring NASCO system status."
 license = "MIT"
 readme = "README.md"
 authors = ["KaoruNishikawa <k.nishikawa@a.phys.nagoya-u.ac.jp>"]
-homepage = "https://github.com/USERNAME/PACKAGENAME"
-repository = "https://github.com/USERNAME/PACKAGENAME"
+homepage = "https://github.com/KaoruNishikawa/nasco_monitor"
+repository = "https://github.com/KaoruNishikawa/nasco_monitor"
 
 [tool.poetry.dependencies]
 python = "^3.6"
