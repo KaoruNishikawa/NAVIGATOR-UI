@@ -2,13 +2,17 @@
     "name": "nasco-monitor",
     "version": "0.1.0",
     "description": "GUI tool for monitoring NASCO system status.",
+    "repository": "github:kaorunishikawa/nasco_monitor",
     "private": true,
     "author": "Kaoru Nishikawa <k.nishikawa@a.phys.nagoya-u.ac.jp>",
-    "main": "index.html",
+    "main": "index.js",
     "dependencies": {
         "electron": "^12.0.2",
         "xterm": "^4.10.0",
         "xterm-addon-attach": "^0.6.0"
     },
-    "devDependencies": {}
+    "devDependencies": {},
+    "engines": {
+        "node": "^12.0.0"
+    }
 }
