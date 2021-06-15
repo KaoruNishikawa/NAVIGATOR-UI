@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- main stylesheet -->
+    <link rel="stylesheet" href="../src/css/main.css" />
+    <!-- packages -->
+    <script type="module" src="../src/js/basicPageInfo.js"></script>
+    <!-- page title -->
+    <title>NASCO-Monitor</title>
+</head>
+
+<body style="background-color: #FFF;">
+    <h1>NAVIGATOR</h1>
+    <p>
+        N<span style="font-variant: small-caps">ecst</span>
+        Automated Visual Information Graph
+        with Advanced Telescope Operation Runtime
+    </p>
+    <p style="text-align: right;">
+        Current server: <span id="serverAddress"></span>
+        <button onclick="location.href='launch.html'">Relaunch</button>
+    </p>
+    <div id="systemStatus"></div>
+    <div id="mainTerminal"></div>
+    <button id="disconnect">Disconnect</button>
+    <button id="reconnect">Reconnect</button>
+    <script type="module" src="../dist/terminal.js"></script>
+</body>
+
+</html>

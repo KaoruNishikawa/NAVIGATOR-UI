@@ -10,7 +10,8 @@
     "scripts": {
         "build": "webpack",
         "start": "electron .",
-        "test": "jest"
+        "test": "jest",
+        "restart": "webpack; electron ."
     },
     "repository": {
         "type": "git",

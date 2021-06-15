@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- main stylesheet -->
+    <link rel="stylesheet" href="../src/css/launch.css" />
+    <!-- page title -->
+    <title>NAVIGATOR</title>
+</head>
+
+<body>
+    <script type="module" src="../src/js/launch.js"></script>
+    <form action="#" method="GET" name="IpInputField" onsubmit="return connect()">
+        <p>
+            Server Address:
+            <input type="text" name="Address" value="" placeholder="172.20.0.1:4864" size="20" />
+        </p>
+        <p>
+            <input type="submit" value="Connect" />
+        </p>
+    </form>
+
+    <p>
+        Running on Node.js <span id="node-version"></span>,
+        Chromium <span id="chrome-version"></span>,
+        and Electron <span id="electron-version"></span>.
+    </p>
+
+</body>
+
+</html>
