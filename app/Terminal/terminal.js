@@ -16,6 +16,7 @@ class TerminalClient {
         this.parentDiv = document.getElementById(parentID)
         let terminalDiv = document.createElement("div")
         let monitorDiv = document.createElement("div")
+        terminalDiv.classList.add("terminal")
         monitorDiv.classList.add("monitor")
         this.parentDiv.appendChild(terminalDiv)
         this.parentDiv.appendChild(monitorDiv)
@@ -37,6 +38,7 @@ class TerminalClient {
         this.url = url
         this.connectWebSocket(this.url)
         this.bindKeys()
+        this.term.focus()
     }
 
     connectWebSocket(url) {
@@ -54,12 +56,29 @@ class TerminalClient {
         }
         this.ws.onerror = (err) => {
             this.statusMonitor.append(
-                `ERROR: Connection to "${err.target.url}" errored out.`, "error"
+                `ERROR: Connection to "${err.target.url}" failed.`, "error"
             )
         }
     }
 
     bindKeys() {
+        this.term.attachCustomKeyEventHandler(e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === "v") {
+                e.preventDefault()
+                window.navigator.clipboard.readText()
+                    .then(
+                        text => {
+                            this.currLine = insertCharAt(this.currLine, text, this.cursorInLine)
+                            this.writeInput(text)
+                            this.cursorInLine += text.length
+                        }
+                    ).catch(
+                        error => console.error(error)
+                    )
+                return false
+            }
+            return true
+        })
         this.term.onKey(e => {
             const ev = e.domEvent
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey
@@ -83,6 +102,15 @@ class TerminalClient {
                     this.cursorInLine -= 1
                     this.backspace()
                 }
+            } else if (ev.code === "Delete") {  /* Delete key */
+                if (this.currLine) {
+                    this.currLine = removeCharAt(this.currLine, this.cursorInLine)
+                    this.delete()
+                }
+            } else if (ev === 0) {
+                this.earlyCtrlC()
+            } else if (ev === 0) {
+                this.paste()
             } else if (charCode == 0x1b) {  /* Arrow keys */
                 let value
                 switch (e.key.substr(1)) {
@@ -121,9 +149,14 @@ class TerminalClient {
     writeInput(input, clear = false) {
         if (clear) { this.clearLine() }
         this.term.write(`\x9B1@${input}`)
+        // handle this.cursorInLine and update this.currLine
+        // handle over-80 characters input
     }
 
-    clearLine() { this.term.write("\x1b[2K\r") }
+    clearLine() {
+        // handle multi line element
+        this.term.write("\x1b[2K\r")
+    }
 
     clearTerm() { this.term.reset() }
 
@@ -149,7 +182,16 @@ class TerminalClient {
         this.cursorInLine += by
     }
 
-    backspace() { this.writeInput("\b\x9B1P") }
+    backspace() { this.term.write("\b\x9B1P") }
+
+    delete() { this.term.write("\x9B1P") }
+
+    earlyCtrlC() { }
+
+    attachAndResume() {
+        // when html is loaded and previous data exist,
+        // attach this terminal to html element, then display previous data
+    }
 }
 
 
@@ -179,7 +221,6 @@ class HistoryBuffer {
     }
 
     getPrevious() {
-        console.log(this.cursor - 1)
         const idx = Math.max(0, this.cursor - 1)
         this.cursor = idx
         return this.entries[this.cursor]
@@ -220,4 +261,4 @@ class TerminalStatus {
 
 const serverIP = main.serverIP || "localhost"
 const terminalURL = "ws://" + serverIP + "/terminal"
-new TerminalClient("terminal", terminalURL)
+new TerminalClient("term", terminalURL)
