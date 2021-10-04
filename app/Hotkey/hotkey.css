@@ -1,0 +1,10 @@
+.key {
+    background-color: #F8F4E6;
+    border: 2px solid #DDDCD6;
+    border-radius: 3px;
+    margin: 0 3px;
+    padding: 1px;
+}
+td {
+    border-right: 1px solid #C0C6C9;
+}
