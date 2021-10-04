@@ -1,12 +1,21 @@
 .monitor {
     background-color: #FFFFFC;
-    margin: 10px 0;
+    margin: 0 0px 10px 0px;
     padding: 10px;
-    border: 3px solid #BBBCDE;
+    border: 5px solid #BBBCDE;
+    border-top: none;
     height: 150px;
     overflow-y: scroll;
     font-family: monospace, serif;
 }
+div.terminal {
+    background-color: #BBBCDE;
+    margin: 0;
+    padding: 5px;
+}
+/* .xterm-cursor-layer .xterm-viewport {
+    padding: 5px;
+} */
 .error {
     animation: blinkError 1s step-end infinite alternate;
 }
