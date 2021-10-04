@@ -50,6 +50,8 @@ code {
     .sidenav a {font-size: 18px;}
 }
 .topnav {
+    z-index: 1;
+    background-clip: content-box;
     padding-left: 150px;
     height: 50px;
     width: calc(100% - 150px);
