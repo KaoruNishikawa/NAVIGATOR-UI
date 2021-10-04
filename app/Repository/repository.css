@@ -1,0 +1,10 @@
+.name {
+    font-weight: bold;
+}
+.deprecated {
+    color: #EC6D71
+}
+.command {
+    color: #CD5E3C;
+    font-family: monospace, serif;
+}
