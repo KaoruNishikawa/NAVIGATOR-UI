@@ -1,0 +1,29 @@
+.monitor {
+    background-color: #FFFFFC;
+    margin: 10px 0;
+    padding: 10px;
+    border: 3px solid #BBBCDE;
+    height: 150px;
+    overflow-y: scroll;
+    font-family: monospace, serif;
+}
+.error {
+    animation: blinkError 1s step-end infinite alternate;
+}
+@keyframes blinkError {
+    0% {
+        background-color: #E60033;
+        color: #FFFFFC;
+    }
+    50% {
+        background-color: transparent;
+        color: inherit;
+    }
+}
+.warning {
+    animation: blinkWarning 1s step-end infinite alternate;
+}
+@keyframes blinkWarning {
+    0% {background-color: #FFEC47;}
+    50% {background-color: transparent;}
+}

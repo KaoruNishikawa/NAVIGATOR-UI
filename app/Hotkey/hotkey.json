@@ -1,0 +1,64 @@
+{
+    "Zoom in": {
+        "mac": [
+            "&#8984;",
+            "&#8679;",
+            ";"
+        ],
+        "windows": [
+            "ctrl",
+            "shift",
+            ";"
+        ],
+        "linux": [
+            "ctrl",
+            "shift",
+            ";"
+        ]
+    },
+    "Zoom out": {
+        "mac": [
+            "&#8984;",
+            "-"
+        ],
+        "windows": [
+            "ctrl",
+            "-"
+        ],
+        "linux": [
+            "ctrl",
+            "-"
+        ]
+    },
+    "Reload": {
+        "mac": [
+            "&#8984;",
+            "R"
+        ],
+        "windows": [
+            "ctrl",
+            "R"
+        ],
+        "linux": [
+            "ctrl",
+            "R"
+        ]
+    },
+    "Open console": {
+        "mac": [
+            "&#8984;",
+            "&#8997;",
+            "I"
+        ],
+        "windows": [
+            "ctrl",
+            "shift",
+            "I"
+        ],
+        "linux": [
+            "ctrl",
+            "shift",
+            "I"
+        ]
+    }
+}

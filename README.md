@@ -1,29 +1,30 @@
-# NASCO-monitor
+# NAVIGATOR-UI
 
-[![PyPI](https://img.shields.io/pypi/v/PACKAGENAME.svg?label=PyPI&style=flat-square)](https://pypi.org/pypi/PACKAGENAME/)
-[![Python](https://img.shields.io/pypi/pyversions/PACKAGENAME.svg?label=Python&color=yellow&style=flat-square)](https://pypi.org/pypi/PACKAGENAME/)
-[![Test](https://img.shields.io/github/workflow/status/KaoruNishikawa/nasco_monitor/Test?logo=github&label=Test&style=flat-square)](https://github.com/KaoruNishikawa/nasco_monitor/actions)
+[![Test](https://img.shields.io/github/workflow/status/KaoruNishikawa/NAVIGATOR-UI/Test?logo=github&label=Test&style=flat-square)](https://github.com/KaoruNishikawa/NAVIGATOR-UI/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?label=License&style=flat-square)](LICENSE)
 
-Status monitor for NASCO survey.
+Client side implementation of NAVIGATOR.
 
 ## Features
 
 This library provides:
 
-- something.
+- In preparation...
 
 ## Installation
 
+Download from [releases](https://github.com/KaoruNishikawa/NAVIGATOR-UI/releases/latest).
+
+### Command line installation
+
 ```shell
-pip install PACKAGENAME
+curl -L -o path/to/downloads/directory/<zipname> https://github.com/KaoruNishikawa/NAVIGATOR-UI/releases/latest/download/<zipname>
+unzip -q path/to/downloads/directory/<zipname>
 ```
 
 ## Usage
 
-### 1st module
-
-### 2nd module
+In preparation...
 
 ---
 
