@@ -1,0 +1,232 @@
+{
+    "necst-ros": {
+        "description": "Antenna control and system calibration",
+        "category": "ROS package",
+        "url": "https://github.com/nanten2/necst-ros",
+        "github-url": "https://github.com/nanten2/necst-ros",
+        "installation-command": "git clone https://github.com/nanten2/necst-ros.git",
+        "features": [
+            "Coordinate calculation",
+            "Antenna and dome control",
+            "Telescope and receiver calibration",
+            "Ensure telescope safety"
+        ],
+        "deprecated-features": [
+            "Observation spec file parser",
+            "Topic-wise logger"
+        ],
+        "simulator": true,
+        "deprecated": false,
+        "successor": null
+    },
+    "necst-core": {
+        "description": "Log and monitor NECST system",
+        "category": "ROS package",
+        "url": "https://github.com/nanten2/necst-core",
+        "github-url": "https://github.com/nanten2/necst-core",
+        "installation-command": "git clone https://github.com/nanten2/necst-core.git",
+        "features": [
+            "Log all ROS topics using necstdb"
+        ],
+        "deprecated-features": [
+            "Log to Google Sheets",
+            "Web monitor for whole NECST system"
+        ],
+        "simulator": false,
+        "deprecated": false,
+        "successor": null
+    },
+    "necst-obsfiles": {
+        "description": "Observation spec collection",
+        "category": "file collection",
+        "url": "https://github.com/nanten2/necst-obsfiles",
+        "github-url": "https://github.com/nanten2/necst-obsfiles",
+        "installation-command": "git clone https://github.com/nanten2/necst-obsfiles.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "necst": {
+        "description": "Ubuntu PC setup files",
+        "category": "file collection",
+        "url": "https://github.com/nanten2/necst",
+        "github-url": "https://github.com/nanten2/necst",
+        "installation-command": "git clone https://github.com/nanten2/necst.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "necstdb": {
+        "description": "Database for NECST",
+        "category": "Python package",
+        "url": "https://pypi.org/project/necstdb",
+        "github-url": "https://github.com/ogawa-ros/necstdb",
+        "installation-command": "pip3 install necstdb",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "n2lite": {
+        "description": "Database for NECST using SQLite",
+        "category": "Python package",
+        "url": "https://github.com/kenya-noda/n2lite",
+        "github-url": "https://github.com/kenya-noda/n2lite",
+        "installation-command": "git clone https://github.com/kenya-noda/n2lite.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": true,
+        "successor": null
+    },
+    "pyinterface": {
+        "description": "PCI board driver",
+        "category": "Python package",
+        "url": "https://github.com/ars096/pyinterface2",
+        "github-url": "https://github.com/ars096/pyinterface2",
+        "installation-command": "git clone https://github.com/ars096/pyinterface2.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": [
+            "rospkg-pyinterface"
+        ]
+    },
+    "pymeasure": {
+        "description": "Hardware API",
+        "category": "Python package",
+        "url": "https://github.com/1p85m/pymeasure",
+        "github-url": "https://github.com/1p85m/pymeasure",
+        "installation-command": "git clone https://github.com/1p85m/pymeasure.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": false,
+        "deprecated": true,
+        "successor": [
+            "ogameasure"
+        ]
+    },
+    "ogameasure": {
+        "description": "Hardware API",
+        "category": "Python package",
+        "url": "https://pypi.org/project/ogameasure",
+        "github-url": "https://github.com/ogawa-ros/ogameasure",
+        "installation-command": "pip3 install ogameasure",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "N-CONST": {
+        "description": "System parameter manager",
+        "category": "Python package",
+        "url": "https://pypi.org/project/n-const",
+        "github-url": "https://github.com/nanten2/N-CONST",
+        "installation-command": "pip3 install n-const",
+        "features": [
+            "Telescope and receiver constant parameters",
+            "Observation spec file parser",
+            "Instrumental error parameter file parser"
+        ],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "OBS-Script-Software": {
+        "description": "Observation spec file generator",
+        "category": "GUI source",
+        "url": "https://github.com/nanten2/OBS-Script-Software/releases/latest",
+        "github-url": "https://github.com/nanten2/OBS-Script-Software",
+        "installation-command": null,
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": false,
+        "successor": null
+    },
+    "NAVIGATOR": {
+        "description": "Integrated telescope controller",
+        "category": "GUI source",
+        "url": "https://github.com/KaoruNishikawa/NAVIGATOR",
+        "github-url": "https://github.com/KaoruNishikawa/NAVIGATOR",
+        "installation-command": null,
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": true,
+        "successor": null
+    },
+    "NASCO-analysis": {
+        "description": "Data reduction",
+        "category": "Python package",
+        "url": "https://github.com/nanten2/NASCO-analysis",
+        "github-url": "https://github.com/nanten2/NASCO-analysis",
+        "installation-command": "git clone https://github.com/nanten2/NASCO-analysis.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": true,
+        "successor": [
+            "DReAP"
+        ]
+    },
+    "DReAP": {
+        "description": "Data reduction",
+        "category": "Python package",
+        "url": "https://github.com/nanten2/DReAP",
+        "github-url": "https://github.com/nanten2/DReAP",
+        "installation-command": "git clone https://github.com/nanten2/DReAP.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": null,
+        "deprecated": true,
+        "successor": null
+    },
+    "NASCORX_XFFTS": {
+        "description": "XFFTS spectral data handler",
+        "category": "ROS package",
+        "url": "https://github.com/nanten2/NASCORX_XFFTS",
+        "github-url": "https://github.com/nanten2/NASCORX_XFFTS",
+        "installation-command": "git clone https://github.com/nanten2/NASCORX_XFFTS.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": false,
+        "deprecated": false,
+        "successor": null
+    },
+    "rx_device_driver": {
+        "description": "Hardware API + device-wise controller",
+        "category": "ROS package",
+        "url": "https://github.com/ogawa-ros/rx_device_driver",
+        "github-url": "https://github.com/ogawa-ros/rx_device_driver",
+        "installation-command": "git clone https://github.com/ogawa-ros/rx_device_driver.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": false,
+        "deprecated": false,
+        "successor": [
+            "ogameasure",
+            "rospkg-ogameasure"
+        ]
+    },
+    "nasco_system": {
+        "description": "Receiver controller",
+        "category": "ROS package",
+        "url": "https://github.com/ogawa-ros/nasco_system",
+        "github-url": "https://github.com/ogawa-ros/nasco_system",
+        "installation-command": "git clone https://github.com/ogawa-ros/nasco_system.git",
+        "features": [],
+        "deprecated-features": [],
+        "simulator": false,
+        "deprecated": false,
+        "successor": null
+    }
+}
