@@ -27,7 +27,7 @@ function createWindow() {
         mainWindow.show()
     })
 
-    mainWindow.loadFile(path.join(__dirname, "hotkey", "hotkey.html"))
+    mainWindow.loadFile(path.join(__dirname, "Splash", "splash.html"))
 }
 
 app.on("ready", createWindow)
