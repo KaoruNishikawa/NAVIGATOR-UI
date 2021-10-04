@@ -1,0 +1,129 @@
+html {
+    width: 100vw;
+    height: 100vh;
+}
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        "Open Sans",
+        "Helvetica Neue",
+        sans-serif;
+    margin: auto;
+    padding: 3%;
+    background: #F8FBF8;
+    color: #19448E;
+}
+td {
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    border-bottom: 1px solid #C0C6C9;
+}
+code {
+    font-family: monospace, serif;
+}
+.sidenav {
+    height: 100%;
+    width: 150px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #522F60;
+    overflow-x: hidden;
+    padding-top: 30px;
+    text-align: center;
+}
+.main {
+    margin-left: 150px;
+    margin-top: 50px;
+}
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+.topnav {
+    padding-left: 150px;
+    height: 50px;
+    width: calc(100% - 150px);
+    top: 0;
+    left: 0;
+    background-color: #745399;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: scroll;
+    border-bottom: 5px solid #522F60;
+}
+.navlink {
+    padding: 0 20px;
+    height: 50px;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-left: solid 3px #A59ACA;
+    font-weight: bold;
+    line-height: 50px;
+}
+.navlink:hover {
+    color: #FEF263;
+    border-left: solid 3px #FEF263;
+}
+.this-page {
+    background-color: #522F60;
+    border-left: solid 3px #FEF263;
+}
+
+.center {
+    margin: auto;
+    padding: 10px;
+}
+.text-center {
+    text-align: center;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #000000;
+    background-color: #00000055;
+}
+.modal-content {
+    background-color: #F8FBF8;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #000000;
+    width: 35em;
+    max-width: 80%;
+}
+.batch {
+    border: 2px solid #59B9C6;
+    background-color: #F7FCFE;
+    border-radius: 4px;
+    padding: 2px;
+}
+.bold {
+    font-weight: bold;
+}
+.tbl-header {
+    font-weight: 500;
+}
+.link {
+    height: 1em;
+    cursor: pointer;
+}
+.link:hover {
+    background-color: #FEF26377;
+}
