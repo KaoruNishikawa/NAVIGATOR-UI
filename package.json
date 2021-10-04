@@ -1,5 +1,5 @@
 {
-    "name": "nasco_monitor",
+    "name": "navigator-ui",
     "version": "0.1.0",
     "description": "Web monitor for NASCO observations.",
     "repository": "github:KaoruNishikawa/NAVIGATOR-UI",
