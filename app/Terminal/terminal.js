@@ -16,8 +16,8 @@ class TerminalClient {
         this.parentDiv = document.getElementById(parentID)
         let terminalDiv = document.createElement("div")
         let monitorDiv = document.createElement("div")
-        terminalDiv.classList.add("terminal")
-        monitorDiv.classList.add("monitor")
+        terminalDiv.classList.add("nv-terminal")
+        monitorDiv.classList.add("nv-monitor")
         this.parentDiv.appendChild(terminalDiv)
         this.parentDiv.appendChild(monitorDiv)
 
@@ -31,6 +31,12 @@ class TerminalClient {
             }
         })
         this.term.open(terminalDiv)
+
+        const terminalWidth = terminalDiv.getElementsByClassName("xterm-cursor-layer")[0].width * 1.015  /* 1.015 is a magic factor */
+        console.log(terminalWidth)
+        terminalDiv.style.width = terminalWidth + "px"
+        monitorDiv.style.width = terminalWidth + "px"
+
         this.statusMonitor = new TerminalStatus(monitorDiv)
         this.history = new HistoryBuffer(199)
         this.currLine = ""
@@ -44,7 +50,7 @@ class TerminalClient {
     connectWebSocket(url) {
         this.ws = new WebSocket(url)
         this.ws.onopen = (msg) => {
-            this.statusMonitor.append("Connection established.", "warning")
+            this.statusMonitor.append("Connection established.", "nv-warning")
         }
         this.ws.onmessage = (msg) => {
             const data = JSON.parse(msg.data)
@@ -52,34 +58,40 @@ class TerminalClient {
             this.statusMonitor.append(`Got a response from server: ${data}`)
         }
         this.ws.onclose = (msg) => {
-            this.statusMonitor.append("Disconnected.", "error")
+            this.statusMonitor.append("Disconnected.", "nv-error")
         }
         this.ws.onerror = (err) => {
             this.statusMonitor.append(
-                `ERROR: Connection to "${err.target.url}" failed.`, "error"
+                `ERROR: Connection to "${err.target.url}" failed.`, "nv-error"
             )
         }
     }
 
     bindKeys() {
         this.term.attachCustomKeyEventHandler(e => {
-            if ((e.ctrlKey || e.metaKey) && e.key === "v") {
+            if (e.ctrlKey && e.key === "c") {
+                e.preventDefault()
+                this.earlyCtrlC()
+                return false
+            } else if ((e.ctrlKey || e.metaKey) && e.key === "v") {
                 e.preventDefault()
                 window.navigator.clipboard.readText()
                     .then(
-                        text => {
+                        (text) => {
                             this.currLine = insertCharAt(this.currLine, text, this.cursorInLine)
                             this.writeInput(text)
                             this.cursorInLine += text.length
                         }
                     ).catch(
-                        error => console.error(error)
+                        (error) => { console.error(error) }
                     )
                 return false
             }
             return true
         })
         this.term.onKey(e => {
+            /* Japanese input cannot be supported through onKey method.
+             Consider using attachCustomKeyEventHandler like above if it's needed. */
             const ev = e.domEvent
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey
 
@@ -88,13 +100,13 @@ class TerminalClient {
             if (ev.code === "Enter") {  /* Enter key */
                 if (this.currLine) {
                     this.history.push(this.currLine)
-                    this.history.resetCursor()
                     this.runCommand()
                     this.term.write("\r\n")
                 } else {
                     this.term.write("\r\n")
                     this.prompt()
                 }
+                this.history.resetCursor()
                 this.cursorInLine = 0
             } else if (ev.code === "Backspace") {  /* Backspace key */
                 if (this.currLine) {
@@ -107,20 +119,22 @@ class TerminalClient {
                     this.currLine = removeCharAt(this.currLine, this.cursorInLine)
                     this.delete()
                 }
-            } else if (ev === 0) {
-                this.earlyCtrlC()
-            } else if (ev === 0) {
-                this.paste()
             } else if (charCode == 0x1b) {  /* Arrow keys */
                 let value
                 switch (e.key.substr(1)) {
                     case "[A":  /* Up arrow */
+                        if (this.history.isReset && this.history.entries[-1] !== this.currLine) {
+                            this.history.latch(this.currLine)
+                        }
                         value = this.history.getPrevious()
                         this.currLine = value
                         this.writeInput(value, true)
                         this.cursorInLine = this.currLine.length
                         break
                     case "[B":  /* Down arrow */
+                        if (this.history.isReset) {
+                            this.history.latch(this.currLine)
+                        }
                         value = this.history.getNext()
                         this.currLine = value
                         this.writeInput(value, true)
@@ -140,6 +154,7 @@ class TerminalClient {
                 this.currLine = insertCharAt(this.currLine, e.key, this.cursorInLine)
                 this.writeInput(e.key)
                 this.cursorInLine += 1
+                this.history.resetCursor()
             }
         })
     }
@@ -155,7 +170,7 @@ class TerminalClient {
 
     clearLine() {
         // handle multi line element
-        this.term.write("\x1b[2K\r")
+        this.term.write("\x9B2K\r")
     }
 
     clearTerm() { this.term.reset() }
@@ -201,6 +216,7 @@ class HistoryBuffer {
         this.size = size
         this.entries = []
         this.cursor = 0
+        this.latched = ""
     }
 
     push(entry) {
@@ -216,11 +232,16 @@ class HistoryBuffer {
         this.resetCursor()
     }
 
-    resetCursor() {
-        this.cursor = this.entries.length
+    resetCursor() { this.cursor = this.entries.length }
+
+    get isReset() {
+        return this.cursor === this.entries.length
     }
 
+    latch(str) { this.latched = str }
+
     getPrevious() {
+        if (this.entries.length === 0) { return "" }
         const idx = Math.max(0, this.cursor - 1)
         this.cursor = idx
         return this.entries[this.cursor]
@@ -229,7 +250,7 @@ class HistoryBuffer {
     getNext() {
         if (this.cursor + 1 >= this.entries.length) {
             this.resetCursor()
-            return ""
+            return this.latched
         } else {
             const idx = Math.min(this.entries.length, this.cursor + 1)
             this.cursor = idx
@@ -259,6 +280,6 @@ class TerminalStatus {
 }
 
 
-const serverIP = main.serverIP || "localhost"
+const serverIP = main.serverIP || "localhost:4864"
 const terminalURL = "ws://" + serverIP + "/terminal"
 new TerminalClient("term", terminalURL)
