@@ -30,18 +30,18 @@
             "-"
         ]
     },
-    "Reload": {
+    "Reset zoom": {
         "mac": [
             "&#8984;",
-            "R"
+            "0"
         ],
         "windows": [
             "ctrl",
-            "R"
+            "0"
         ],
         "linux": [
             "ctrl",
-            "R"
+            "0"
         ]
     },
     "Open console": {
