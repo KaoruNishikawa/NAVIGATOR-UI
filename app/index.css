@@ -33,7 +33,7 @@ code {
     height: 100%;
     width: 150px;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     left: 0;
     background-color: #522F60;
@@ -50,7 +50,7 @@ code {
     .sidenav a {font-size: 18px;}
 }
 .topnav {
-    z-index: 1;
+    z-index: 4;
     background-clip: content-box;
     padding-left: 150px;
     height: 50px;
@@ -69,6 +69,7 @@ code {
     padding: 0 20px;
     height: 50px;
     color: #FFFFFF;
+    background-color: inherit;
     text-decoration: none;
     border-left: solid 3px #A59ACA;
     font-weight: bold;
@@ -93,7 +94,7 @@ code {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 6;
     left: 0;
     top: 0;
     width: 100%;
