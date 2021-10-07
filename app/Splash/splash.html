@@ -15,7 +15,17 @@
     <div class="topnav"></div>
     <div class="main">
         <div id="logo"></div>
-        <div id="server-query"></div>
+        <div id="server-query">
+            <input type="text" name="Address" value="" placeholder="172.20.0.1:4864" size="20" />
+            <input type="submit" value="Start" />
+        </div>
+        <div id="app-info">
+            <p>
+                Running on Node.js <span id="node-version"></span>,
+                Chromium <span id="chrome-version"></span>,
+                and Electron <span id="electron-version"></span>.
+            </p>
+        </div>
     </div>
 
     <!-- Script(s) to render this page -->
