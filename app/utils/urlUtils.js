@@ -20,8 +20,9 @@ function attachQuery(url, kvPairs) {
     let query = url.indexOf("?") == -1 ? "&" : "?"
     for (const key of Object.keys(kvPairs)) {
         query += kvPairs[key] ? `${key}=${kvPairs[key]}` : ""
+        query += "&"
     }
-    return url + query
+    return url + query.slice(0, query.length - 1)  /* Remove last '&' */
 }
 
 function setZoomFactor(url) {
