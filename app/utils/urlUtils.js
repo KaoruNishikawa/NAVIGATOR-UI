@@ -19,7 +19,7 @@ function parseQuery(url) {
 function attachQuery(url, kvPairs) {
     let query = url.indexOf("?") == -1 ? "&" : "?"
     for (const key of Object.keys(kvPairs)) {
-        query += `${key}=${kvPairs[key]}`
+        query += kvPairs[key] ? `${key}=${kvPairs[key]}` : ""
     }
     return url + query
 }
