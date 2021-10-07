@@ -11,6 +11,8 @@
         "start": "electron ."
     },
     "dependencies": {
+        "electron-json-storage": "^4.5.0",
+        "jquery": "^3.6.0",
         "xterm": "^4.10.0",
         "xterm-addon-attach": "^0.6.0"
     },

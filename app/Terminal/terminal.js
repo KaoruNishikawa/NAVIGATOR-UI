@@ -1,5 +1,6 @@
 "use strict"
 
+const $ = require("jQuery")
 const { removeCharAt, insertCharAt } = require("../utils/strUtil")
 var main = require("../main")
 const { Terminal } = require("xterm")
@@ -13,13 +14,9 @@ class TerminalClient {
     */
 
     constructor(parentID, url) {
-        this.parentDiv = document.getElementById(parentID)
-        let terminalDiv = document.createElement("div")
-        let monitorDiv = document.createElement("div")
-        terminalDiv.classList.add("nv-terminal")
-        monitorDiv.classList.add("nv-monitor")
-        this.parentDiv.appendChild(terminalDiv)
-        this.parentDiv.appendChild(monitorDiv)
+        this.$parentDiv = $(parentID)
+        let $terminalDiv = $("<div>", { class: "nv-terminal" }).appendTo(this.$parentDiv)
+        let $monitorDiv = $("<div>", { class: "nv-monitor" }).appendTo(this.$parentDiv)
 
         this.term = new Terminal({
             cols: 80,
@@ -30,19 +27,21 @@ class TerminalClient {
                 background: "#17184B"
             }
         })
-        this.term.open(terminalDiv)
+        this.term.open($terminalDiv.get(0))
 
-        const terminalWidth = terminalDiv.getElementsByClassName("xterm-cursor-layer")[0].width * 1.015  /* 1.015 is a magic factor */
-        console.log(terminalWidth)
-        terminalDiv.style.width = terminalWidth + "px"
-        monitorDiv.style.width = terminalWidth + "px"
+        let terminalWidth = $terminalDiv.find(".xterm-cursor-layer").width()
+        terminalWidth *= 1.015  /* 1.015 is a magic factor */
+        // console.log(terminalWidth)
+        $terminalDiv.css("width", terminalWidth).css("width", "+=10px")
+        $monitorDiv.css("width", terminalWidth).css("width", "+=10px")
 
-        this.statusMonitor = new TerminalStatus(monitorDiv)
+        this.statusMonitor = new TerminalStatus($monitorDiv)
         this.history = new HistoryBuffer(199)
         this.currLine = ""
         this.cursorInLine = 0
-        this.url = url
-        this.connectWebSocket(this.url)
+
+        /* Initialize. */
+        this.connectWebSocket(url)
         this.bindKeys()
         this.term.focus()
     }
@@ -91,7 +90,7 @@ class TerminalClient {
         })
         this.term.onKey(e => {
             /* Japanese input cannot be supported through onKey method.
-             Consider using attachCustomKeyEventHandler like above if it's needed. */
+             Consider using attachCustomKeyEventHandler like above if needed. */
             const ev = e.domEvent
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey
 
@@ -212,6 +211,10 @@ class TerminalClient {
 
 class HistoryBuffer {
 
+    /**
+     * Buffer which keeps the commands executed.
+     * @param {number} size - Number of commands to be kept in this buffer.
+     */
     constructor(size) {
         this.size = size
         this.entries = []
@@ -262,24 +265,30 @@ class HistoryBuffer {
 
 class TerminalStatus {
 
-    constructor(monitorDiv) {
-        this.monitorField = monitorDiv
-        this.maxLines = 999
+    /**
+     * 
+     * @param {typeof $("<div>")} $monitorDiv - An html element to attach status console.
+     */
+    constructor($monitorDiv) {
+        this.$monitorField = $monitorDiv
+        this.maxLines = 3
     }
 
     append(data, cls) {
-        const msg = document.createElement("span")
-        msg.innerText = data + "\n"
-        if (cls) { msg.classList.add(cls) }
-        this.monitorField.appendChild(msg)
-        if (this.monitorField.childElementCount > this.maxLines) {
-            this.monitorField.removeChild(this.monitorField.children[0])
+        const $msg = $("<span>", { text: data }).appendTo(this.$monitorField)
+        if (cls) { $msg.addClass(cls) }
+        if (this.$monitorField.children().length > this.maxLines) {
+            this.$monitorField.remove(this.$monitorField.first())
         }
-        this.monitorField.scrollTop = this.monitorField.scrollHeight
+        this.$monitorField.scrollTop(this.$monitorField.prop("scrollHeight"))
+        $("<br>").appendTo(this.$monitorField)
     }
 }
 
 
 const serverIP = main.serverIP || "localhost:4864"
 const terminalURL = "ws://" + serverIP + "/terminal"
-new TerminalClient("term", terminalURL)
+new TerminalClient("#nv-terminal-field", terminalURL)
+$("#nv-add-terminal").on("click", e => {
+    new TerminalClient("#nv-terminal-field", terminalURL)
+})
