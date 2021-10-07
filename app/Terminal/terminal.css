@@ -1,22 +1,17 @@
-.monitor {
+.nv-monitor {
     background-color: #FFFFFC;
-    margin: 0 0px 10px 0px;
-    padding: 10px;
+    margin: 0 auto 10px auto;
     border: 5px solid #BBBCDE;
     border-top: none;
     height: 150px;
     overflow-y: scroll;
     font-family: monospace, serif;
 }
-div.terminal {
-    background-color: #BBBCDE;
-    margin: 0;
-    padding: 5px;
+.nv-terminal {
+    border: 5px solid #BBBCDE;
+    margin: auto;
 }
-/* .xterm-cursor-layer .xterm-viewport {
-    padding: 5px;
-} */
-.error {
+.nv-error {
     animation: blinkError 1s step-end infinite alternate;
 }
 @keyframes blinkError {
@@ -29,10 +24,15 @@ div.terminal {
         color: inherit;
     }
 }
-.warning {
+.nv-warning {
     animation: blinkWarning 1s step-end infinite alternate;
 }
 @keyframes blinkWarning {
     0% {background-color: #FFEC47;}
     50% {background-color: transparent;}
+}
+
+/* xterm */
+.terminal {
+    padding: 5px;
 }
