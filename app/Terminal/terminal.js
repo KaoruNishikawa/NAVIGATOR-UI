@@ -1,26 +1,26 @@
 "use strict"
 
 const $ = require("jQuery")
-// var main = require("../main")
+
 const { Terminal } = require("xterm")
 const { LigaturesAddon } = require("xterm-addon-ligatures")
 const { SerializeAddon } = require("xterm-addon-serialize")
 const { WebLinksAddon } = require("xterm-addon-web-links")
 const { Unicode11Addon } = require("xterm-addon-unicode11")
-
+const { clear } = require("electron-json-storage")
 
 class TerminalClient {
 
     /**
      * Client-side implementation of terminal emulator.
-     * For more about control sequences, see [https://xtermjs.org/docs/api/vtfeatures/].
-     * @param {string} parentID - ID of html element to attach this terminal, .
+     * For more about control sequences, see [https://xtermjs.org/docs/api/vtfeatures].
+     * @param {string} parentID - ID of html element to attach this terminal.
      * @param {string} url - URL of PTY server.
-    */
+     */
     constructor(parentID, url) {
         this.$parentDiv = $(parentID)
-        let $terminalDiv = $("<div>", { class: "nv-terminal" }).appendTo(this.$parentDiv)
-        let $monitorDiv = $("<div>", { class: "nv-monitor" }).appendTo(this.$parentDiv)
+        const $terminalDiv = $("<div>", { class: "nv-terminal" }).appendTo(this.$parentDiv)
+        const $monitorDiv = $("<div>", { class: "nv-monitor" }).appendTo(this.$parentDiv)
 
         this.term = new Terminal({
             cols: 80,
@@ -30,14 +30,14 @@ class TerminalClient {
             theme: { background: "#17184B" }
         })
         this.term.open($terminalDiv.get(0))
-        // this.term.loadAddon(new WebLinksAddon())
-        // this.term.loadAddon(new SerializeAddon())
-        // this.term.loadAddon(new LigaturesAddon())
-        // this.term.loadAddon(new Unicode11Addon())
+        this.term.loadAddon(new WebLinksAddon())
+        this.term.loadAddon(new SerializeAddon())
+        this.term.loadAddon(new LigaturesAddon())
+        this.term.loadAddon(new Unicode11Addon())
 
         /* Adjust the field widths. */
         const terminalWidth = `${this.term.cols * 9}px`
-        /* '9' is just an empirical value */
+        /* '9' is just an empirical value. */
         /* Should equal to $terminalDiv.find(".xterm-cursor-layer").width() */
         $terminalDiv.css("width", terminalWidth).css("width", "+=10px")
         $monitorDiv.css("width", terminalWidth).css("width", "+=10px")
@@ -87,87 +87,77 @@ class TerminalClient {
                 window.navigator.clipboard.readText()
                     .then(
                         (text) => {
-                            this.term.write(this.clearLine)
                             _expr = this.currLine.insert(text, this.currLine.cursor)
                             this.term.write(_expr)
                         }
-                    ).catch((error) => { console.error(error) })
+                    ).catch((err) => { console.log(err) })
                 return false
             }
             return true
         })
     }
 
-    breakLine() { this.term.write("\r\n") }
-
     addKeyHandler() {
         this.term.onKey((e) => {
-            /* Japanese input cannot be supported through onKey method.
-             Consider using attachCustomKeyEventHandler like above. */
             const ev = e.domEvent
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey
             const charCode = e.key.charCodeAt(0)
 
             let _expr  /* String to write to terminal. */
 
-            if (ev.code === "Enter") {  /* Enter key */
-                if (!this.currLine.empty) {
+            if (ev.code === "Enter") {  /* Enter */
+                if (!this.currLine.isEmpty) {
                     this.history.push(this.currLine.text)
-                    this.breakLine()
+                    this.term.write(this.currLine.moveCursorToLineEnd())
+                    this.term.write("\r\n")
                     this.runCommand()
                 } else {
-                    this.breakLine()
+                    this.term.write("\r\n")
                     this.prompt()
                 }
                 this.history.resetCursor()
                 this.currLine.reset()
-            } else if (ev.code === "Backspace") {  /* Backspace key */
-                if (!this.currLine.empty) {
-                    this.term.write(this.clearLine)
+            } else if (ev.code === "Backspace") {  /* Backspace */
+                if (!this.currLine.isEmpty) {
                     _expr = this.currLine.remove(this.currLine.cursor - 1, true)
                     this.term.write(_expr)
                 }
-            } else if (ev.code === "Delete") {  /* Delete key */
-                if (!this.currLine.empty) {
-                    this.term.write(this.clearLine)
+            } else if (ev.code === "Delete") {  /* Delete */
+                if (!this.currLine.isEmpty) {
                     _expr = this.currLine.remove(this.currLine.cursor)
                     this.term.write(_expr)
                 }
-            } else if (charCode == 0x1b) {  /* Arrow keys */
+            } else if (charCode === 0x1b) {  /* Arrow */
                 switch (e.key.substr(1)) {
-                    case "[A":  /* Up arrow */
+                    case "[A":  /* Up */
                         if (this.history.isReset && !this.history.latestIs(this.currLine.text)) {
                             this.history.latch(this.currLine.text)
                         }
-                        this.term.write(this.clearLine)
                         _expr = this.currLine.set(this.history.getPrevious())
                         this.term.write(_expr)
                         break
-                    case "[B":  /* Down arrow */
+                    case "[B":  /* Down */
                         if (this.history.isReset) {
                             this.history.latch(this.currLine.text)
                         }
-                        this.term.write(this.clearLine)
                         _expr = this.currLine.set(this.history.getNext())
                         this.term.write(_expr)
                         break
-                    case "[C":  /* Right arrow */
+                    case "[C":  /* Right */
                         this.term.write(this.currLine.moveCursorBy(1))
                         break
-                    case "[D":  /* Left arrow */
+                    case "[D":  /* Left */
                         this.term.write(this.currLine.moveCursorBy(-1))
                         break
                     default:
                         break
                 }
-            } else if (charCode < 32) {  /* Ignore other control keys */
+            } else if (charCode < 32) {  /* Ignore other system keys. */
             } else if (printable && e.key) {
                 this.history.resetCursor()
-                this.term.write(this.clearLine)
                 _expr = this.currLine.insert(e.key, this.currLine.cursor)
                 this.term.write(_expr)
             }
-            console.log(this.currLine.cursor, this.currLine.text)
         })
     }
 
@@ -178,31 +168,22 @@ class TerminalClient {
 
     async loading() {
         for (const c of ["-", "/", "|", "\\"]) {
-            this.term.write(this.clearLine)
-            const _expr = this.currLine.set(c)
+            const _expr = this.currLine.setPromptLength(c)
             this.term.write(_expr)
             await new Promise(resolve => setTimeout(resolve, 200))
         }
-        this.term.write(this.clearLine)
+        this.term.write(this.currLine.termClearExpr)
     }
 
-    get clearLine() { return this.currLine.termClearExpr }
+    clear() { this.term.reset() }
 
-    clearTerm() { this.term.reset() }
+    earlyCtrlC() { }
 
     runCommand() {
-        // send this.currLine to server
-        // this.ws.send(...)
-        this.currLine.reset()
         this.prompt()
     }
 
-    writeResponse() {
-        // this.term.onData(...) -> constructor?
-        // Write return from server
-    }
-
-    earlyCtrlC() { }
+    writeResponse() { }
 }
 
 
@@ -212,59 +193,66 @@ class LineManager {
         this.cols = cols
         this.text = ""
         this.cursor = 0
+        this.latched = ""
         this.promptLength = 0
+    }
+
+    set(str) {
+        const clearExpr = this.termClearExpr
+        this.text = str
+        this.cursor = str.length
+        return clearExpr + this.termTextExpr
+    }
+
+    remove(idx, backspace = false) {
+        const clearExpr = this.termClearExpr
+        this.text = this.text.slice(0, idx) + this.text.slice(idx + 1)
+        let suffixExpr = "\x1B8"
+        if (backspace) { suffixExpr += this.moveCursorBy(-1) }
+        return clearExpr + this.termTextExpr + suffixExpr
+    }
+
+    insert(str, idx) {
+        const clearExpr = this.termClearExpr
+        this.text = this.text.slice(0, idx) + str + this.text.slice(idx)
+        const suffixExpr = "\x1B8" + this.moveCursorBy(str.length)
+        return clearExpr + this.termTextExpr + suffixExpr
     }
 
     setPromptLength(len) { this.promptLength = len }
 
-    append(str) {
-        this.text += str
-        this.cursor += str.length
-    }
-
-    insert(str, idx) {
-        this.text = this.text.slice(0, idx) + str + this.text.slice(idx)
-        this.cursor += str.length
-        return this.termExpr + this.termCursorBackExpr
-    }
-
-    remove(idx, backspace = false) {
-        this.text = this.text.slice(0, idx) + this.text.slice(idx + 1)
-        if (backspace) { this.cursor -= 1 }
-        return this.termExpr + this.termCursorBackExpr
-    }
-
-    set(str) {
-        this.text = str
-        this.cursor = this.text.length
-        return this.termExpr
-    }
-
-    replace(str) { return this.set(str) }
-
-    get numLines() {
-        return Math.max(1, Math.ceil(this.#actualLength / this.cols))
-    }
-
-    get isLastCol() { return this.#actualCursor % this.cols === this.cols - 1 }
-
     get length() { return this.text.length }
 
-    get #actualLength() { return this.text.length + this.promptLength }
+    get numLines() { return Math.ceil((this.#actualLength + 1) / this.cols) }
+
+    get #cursorLine() { return Math.floor(this.#actualCursor / this.cols) + 1 }
+
+    get #actualLength() { return this.length + this.promptLength }
 
     get #actualCursor() { return this.cursor + this.promptLength }
 
-    get #isOneLiner() { return this.#actualLength <= this.cols }
+    get #isOneLiner() { return this.#actualLength < this.cols }
 
-    get #numCurrLine() {
-        return Math.max(1, Math.ceil(this.#actualCursor / this.cols))
+    get termClearExpr() {
+        const goToLastLine = "\x9B1E".repeat(this.numLines - this.#cursorLine)
+        const erasers = "\x9B2K\x9B1F".repeat(this.numLines - 1)
+        const firstLineEraser = `\r\x9B${this.promptLength}C\x9B0K`
+        return "\x1B7" + goToLastLine + erasers + firstLineEraser
     }
 
-    get empty() { return this.text.length === 0 }
-
-    reset() {
-        this.text = ""
-        this.cursor = 0
+    get termTextExpr() {
+        let lines
+        if (this.#isOneLiner) {
+            lines = [this.text]
+        } else {
+            /* First line */
+            lines = [this.text.slice(0, this.cols - this.promptLength)]
+            /* The rest */
+            const rest = this.text.slice(this.cols - this.promptLength)
+            const lengthMatcher = new RegExp(`.{1,${this.cols}}`, "g")
+            lines = lines.concat(rest.match(lengthMatcher))
+        }
+        return lines.join("\r\n")
     }
 
     moveCursorBy(num) {
@@ -283,49 +271,18 @@ class LineManager {
         const cursorDown = diff[1] > 0 ? `\x9B${diff[1]}B` : ""
         const cursorRight = diff[0] > 0 ? `\x9B${diff[0]}C` : ""
         const cursorLeft = diff[0] < 0 ? `\x9B${Math.abs(diff[0])}D` : ""
-        console.log(this.numLines, cursorLeft + cursorUp + cursorDown + cursorRight)
         return cursorUp + cursorDown + cursorLeft + cursorRight
     }
 
-    get termCursorBackExpr() {
-        const to = [
-            this.#actualCursor % this.cols,
-            Math.floor(this.#actualCursor / this.cols)
-        ]
-        let from = [
-            this.#actualLength % this.cols,
-            Math.floor(this.#actualLength / this.cols)
-        ]
-        console.log(from, to)
-        const diff = [to[0] - from[0], to[1] - from[1]]
-        const cursorUp = diff[1] < 0 ? `\x9B${Math.abs(diff[1])}A` : ""
-        const cursorRight = diff[0] > 0 ? `\x9B${diff[0]}C` : ""
-        const cursorLeft = diff[0] < 0 ? `\x9B${Math.abs(diff[0])}D` : ""
-        console.log(this.numLines, cursorLeft + cursorUp + cursorRight)
-        return cursorUp + cursorLeft + cursorRight
+    moveCursorToLineEnd() {
+        return this.moveCursorBy(this.length - this.cursor)
     }
 
-    get termClearExpr() {
-        const goToLastLine = "\x9B1E".repeat(this.numLines - this.#numCurrLine)
-        const erasers = "\x9B2K\x9B1F".repeat(this.numLines - 1)
-        const firstLineEraser = `\r\x9B${this.promptLength}C\x9B0K`
-        console.log(this.numLines, goToLastLine + erasers + firstLineEraser)
-        return goToLastLine + erasers + firstLineEraser
-    }
+    get isEmpty() { return this.text === "" }
 
-    get termExpr() {
-        let lines
-        if (this.#isOneLiner) {
-            lines = [this.text]
-        } else {
-            /* First line */
-            lines = [this.text.slice(0, this.cols - this.promptLength)]
-            /* The rest */
-            const rest = this.text.slice(this.cols - this.promptLength)
-            const lengthMatcher = new RegExp(`.{1,${this.cols}}`, "g")
-            lines = lines.concat(rest.match(lengthMatcher))
-        }
-        return lines.join("\r\n")
+    reset() {
+        this.text = ""
+        this.cursor = 0
     }
 }
 
