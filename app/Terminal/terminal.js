@@ -4,10 +4,10 @@ const $ = require("jQuery")
 
 const { Terminal } = require("xterm")
 const { LigaturesAddon } = require("xterm-addon-ligatures")
-const { SerializeAddon } = require("xterm-addon-serialize")
 const { WebLinksAddon } = require("xterm-addon-web-links")
-const { Unicode11Addon } = require("xterm-addon-unicode11")
-const { clear } = require("electron-json-storage")
+
+const { openInBrowser } = require("../utils/htmlUtils")
+
 
 class TerminalClient {
 
@@ -19,8 +19,12 @@ class TerminalClient {
      */
     constructor(parentID, url) {
         this.$parentDiv = $(parentID)
-        const $terminalDiv = $("<div>", { class: "nv-terminal" }).appendTo(this.$parentDiv)
-        const $monitorDiv = $("<div>", { class: "nv-monitor" }).appendTo(this.$parentDiv)
+        const $terminalDiv = $(
+            "<div>", { class: "nv-terminal" }
+        ).appendTo(this.$parentDiv)
+        const $monitorDiv = $(
+            "<div>", { class: "nv-monitor" }
+        ).appendTo(this.$parentDiv)
 
         this.term = new Terminal({
             cols: 80,
@@ -30,10 +34,13 @@ class TerminalClient {
             theme: { background: "#17184B" }
         })
         this.term.open($terminalDiv.get(0))
-        this.term.loadAddon(new WebLinksAddon())
-        this.term.loadAddon(new SerializeAddon())
+        this.term.loadAddon(
+            new WebLinksAddon((event, url) => {
+                event.preventDefault()
+                openInBrowser(url)
+            })
+        )
         this.term.loadAddon(new LigaturesAddon())
-        this.term.loadAddon(new Unicode11Addon())
 
         /* Adjust the field widths. */
         const terminalWidth = `${this.term.cols * 9}px`
@@ -49,8 +56,8 @@ class TerminalClient {
 
         /* Initialize. */
         this.connectWebSocket(url)
-        this.addEventHandler()
-        this.addKeyHandler()
+        this.defineEventHandler()
+        this.defineKeyHandler()
         this.term.focus()
         this.prompt()
     }
@@ -75,7 +82,7 @@ class TerminalClient {
         }
     }
 
-    addEventHandler() {
+    defineEventHandler() {
         let _expr
         this.term.attachCustomKeyEventHandler((e) => {
             if (e.ctrlKey && e.key === "c") {
@@ -97,7 +104,7 @@ class TerminalClient {
         })
     }
 
-    addKeyHandler() {
+    defineKeyHandler() {
         this.term.onKey((e) => {
             const ev = e.domEvent
             const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey
@@ -130,7 +137,10 @@ class TerminalClient {
             } else if (charCode === 0x1b) {  /* Arrow */
                 switch (e.key.substr(1)) {
                     case "[A":  /* Up */
-                        if (this.history.isReset && !this.history.latestIs(this.currLine.text)) {
+                        if (
+                            this.history.isReset
+                            && !this.history.latestIs(this.currLine.text)
+                        ) {
                             this.history.latch(this.currLine.text)
                         }
                         _expr = this.currLine.set(this.history.getPrevious())
