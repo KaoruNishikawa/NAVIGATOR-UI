@@ -3,7 +3,6 @@
 const $ = require("jQuery")
 
 const { Terminal } = require("xterm")
-const { LigaturesAddon } = require("xterm-addon-ligatures")
 const { WebLinksAddon } = require("xterm-addon-web-links")
 
 const { openInBrowser } = require("../utils/htmlUtils")
@@ -31,6 +30,7 @@ class TerminalClient {
             cursorBlink: true,
             cursorStyle: "block",
             rendererType: "canvas",
+            fontFamily: "monospace",
             theme: { background: "#17184B" }
         })
         this.term.open($terminalDiv.get(0))
@@ -40,7 +40,6 @@ class TerminalClient {
                 openInBrowser(url)
             })
         )
-        this.term.loadAddon(new LigaturesAddon())
 
         /* Adjust the field widths. */
         const terminalWidth = `${this.term.cols * 9}px`
@@ -83,8 +82,9 @@ class TerminalClient {
     }
 
     defineEventHandler() {
-        let _expr
         this.term.attachCustomKeyEventHandler((e) => {
+            let _expr  /* String to write to terminal. */
+
             if (e.ctrlKey && e.key === "c") {
                 e.preventDefault()
                 this.earlyCtrlC()
@@ -187,7 +187,7 @@ class TerminalClient {
 
     clear() { this.term.reset() }
 
-    earlyCtrlC() { }
+    earlyCtrlC() { this.term.write("^C\r\n") }
 
     runCommand() {
         this.prompt()
